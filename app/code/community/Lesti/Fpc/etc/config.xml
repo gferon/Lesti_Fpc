@@ -249,6 +249,7 @@ ___store=/[a-z]{1}[0-9a-z_]*/]]></miss_uri_params>
 sort_order,
 sort_direction,
 display_mode]]></session_params>
+                <tax_rules>0</tax_rules>
                 <customer_groups>0</customer_groups>
                 <use_recently_viewed_products>0</use_recently_viewed_products>
                 <show_age>1</show_age>

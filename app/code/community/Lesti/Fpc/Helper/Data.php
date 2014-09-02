@@ -21,6 +21,7 @@ class Lesti_Fpc_Helper_Data extends Mage_Core_Helper_Abstract
     const XML_PATH_CACHEABLE_ACTIONS = 'system/fpc/cache_actions';
     const XML_PATH_SESSION_PARAMS = 'system/fpc/session_params';
     const XML_PATH_URI_PARAMS = 'system/fpc/uri_params';
+    const XML_PATH_TAX_RULES = 'system/fpc/tax_rules';
     const XML_PATH_CUSTOMER_GROUPS = 'system/fpc/customer_groups';
     const XML_PATH_REFRESH_ACTIONS = 'system/fpc/refresh_actions';
     const XML_PATH_MISS_URI_PARAMS = 'system/fpc/miss_uri_params';
@@ -87,6 +88,14 @@ class Lesti_Fpc_Helper_Data extends Mage_Core_Helper_Abstract
             }
             $design = Mage::getDesign();
             $params['design'] = $design->getPackageName() . '_' . $design->getTheme('template');
+            // tax request
+            if (Mage::getStoreConfig(self::XML_PATH_TAX_RULES)) {
+                $taxCalculation = Mage::getModel('tax/calculation');
+                $taxRequest = $taxCalculation->getRateRequest();
+                $taxRates = $taxCalculation->getRatesForAllProductTaxClasses($taxRequest);
+                sort($taxRates);
+                $params['tax_rates'] = $taxRates;
+            }
             if (Mage::getStoreConfig(self::XML_PATH_CUSTOMER_GROUPS)) {
                 $customerSession = Mage::getSingleton('customer/session');
                 $params['customer_group_id'] = $customerSession->getCustomerGroupId();
