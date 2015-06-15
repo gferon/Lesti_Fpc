@@ -90,11 +90,14 @@ class Lesti_Fpc_Helper_Data extends Mage_Core_Helper_Abstract
             $params['design'] = $design->getPackageName() . '_' . $design->getTheme('template');
             // tax request
             if (Mage::getStoreConfig(self::XML_PATH_TAX_RULES)) {
-                $taxCalculation = Mage::getModel('tax/calculation');
+                $taxCalculation = Mage::getSingleton('tax/calculation');
+                $defaultTaxRequest = $taxCalculation->getDefaultRateRequest();
+                $defaultTax = $taxCalculation->getRatesForAllProductTaxClasses($defaultTaxRequest);
                 $taxRequest = $taxCalculation->getRateRequest();
-                $taxRates = $taxCalculation->getRatesForAllProductTaxClasses($taxRequest);
-                sort($taxRates);
-                $params['tax_rates'] = $taxRates;
+                $currentTax = $taxCalculation->getRatesForAllProductTaxClasses($taxRequest);
+                if ($defaultTax != $currentTax) {
+                    $params['tax_rates'] = $currentTax;
+                }
             }
             if (Mage::getStoreConfig(self::XML_PATH_CUSTOMER_GROUPS)) {
                 $customerSession = Mage::getSingleton('customer/session');
